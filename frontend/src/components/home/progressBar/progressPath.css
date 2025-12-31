@@ -1,0 +1,21 @@
+/* Анімація для stroke Dashoffset */
+@keyframes loading {
+  0% {
+    stroke-dashoffset: 30;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.progress-path {
+  fill: none;
+  stroke: orange;
+  stroke-width: 0.5;
+  stroke-linecap: round;
+
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+
+  animation: loading 2s ease-in-out infinite alternate;
+}

@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@libs/shared": ["libs/src/index.ts"],
+      "@libs/shared/*": ["libs/src/*"]
+    },
+    "moduleResolution": "node",
+    "target": "ES2021",
+    "module": "commonjs",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
+}

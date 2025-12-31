@@ -1,0 +1,1 @@
+{"version":3,"file":"todo.checklist.d.ts","sourceRoot":"","sources":["../../src/interface/todo.checklist.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,kBAAkB;IACjC,EAAE,EAAE,MAAM,CAAC;IACX,KAAK,EAAE,MAAM,CAAC;IACd,SAAS,EAAE,OAAO,CAAC;IACnB,QAAQ,EAAE,MAAM,GAAG,IAAI,CAAC;IACxB,IAAI,EAAE,IAAI,CAAC;CACZ"}
