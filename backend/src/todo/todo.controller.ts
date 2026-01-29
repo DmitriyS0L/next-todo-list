@@ -1,45 +1,47 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
-import { CreateTodoDto, ReorderTodoDto, UpdateTodoDto } from '../dto/todo.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
+import { AuthUser } from '../auth/decorators/user.decorators';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CreateTodoDto, ReorderTodoDto, UpdateTodoDto } from './dto/todo.dto';
 import { TodoService } from './todo.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('todo')
 export class TodoController {
-  constructor(private readonly service: TodoService) {}
+  constructor(private readonly todoService: TodoService) {}
 
   @Get()
-  findAll() {
-    return this.service.findAll();
+  findAll(@AuthUser('id') userId: string) {
+    return this.todoService.findAll(userId);
   }
 
   @Get(':id')
-  findById(id: string) {
-    return this.service.findById(id);
+  findById(@Param('id') id: string, @AuthUser('id') userId: string) {
+    return this.todoService.findById(id, userId);
   }
 
   @Post()
-  create(@Body() todoData: CreateTodoDto) {
-    return this.service.create(todoData);
+  create(@Body() todoData: CreateTodoDto, @AuthUser('id') userId: string) {
+    return this.todoService.create(todoData, userId);
   }
 
   @Patch('reorder')
-  async reorder(@Body() dto: ReorderTodoDto) {
-    await this.service.reorder(dto.todos);
+  async reorder(@Body() dto: ReorderTodoDto, @AuthUser('id') userId: string) {
+    await this.todoService.reorder(dto.todos, userId);
     return { success: true };
   }
 
-  @Patch(':id')
-  async updateStatus(@Param('id') id: string, @Body() todoData: UpdateTodoDto) {
-    return this.service.update(id, todoData);
-  }
-
   @Put(':id')
-  async update(@Param('id') id: string, @Body() todoData: UpdateTodoDto) {
-    return this.service.update(id, todoData);
+  async update(
+    @Param('id') id: string,
+    @Body() todoData: UpdateTodoDto,
+    @AuthUser('id') userId: string
+  ) {
+    return this.todoService.update(id, todoData, userId);
   }
 
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.service.delete(id);
+  async delete(@Param('id') id: string, @AuthUser('id') userId: string) {
+    return this.todoService.delete(id, userId);
   }
 }
 

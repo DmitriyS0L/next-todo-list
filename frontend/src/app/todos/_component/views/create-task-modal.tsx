@@ -1,6 +1,7 @@
-import { createTaskAction } from '@/action/createTaskAction';
+import { createTaskAction } from '@/app/action/taskAction/createTaskAction';
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -8,7 +9,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createTaskSchema, CreateTodoInput, TodoPriorityEnum, TodoTypeEnum } from '@libs';
+import { createTaskSchema, CreateTodoInput, TodoPriorityEnum, TodoTypeEnum } from '@libs/shared';
 import { SelectLabel } from '@radix-ui/react-select';
 import { useActionState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -132,20 +133,19 @@ export const Modal = ({ open, setOpen }: ModalProps) => {
           />
 
           <DialogFooter>
-            <button
+            <DialogClose
               type="button"
               className="bg-red-800 font-medium text-white py-1.5 px-4 rounded transition-hover duration-300 hover:bg-red-700 cursor-pointer"
-              onClick={() => setOpen(false)}
             >
               Cancel
-            </button>
-            <button
+            </DialogClose>
+            <DialogClose
               type="submit"
               className="bg-green-800 font-medium text-white py-1.5 px-4 rounded transition-hover duration-300 hover:bg-green-700 cursor-pointer"
               disabled={isPending}
             >
               Create
-            </button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

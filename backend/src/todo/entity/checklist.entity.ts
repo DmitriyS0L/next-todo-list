@@ -1,9 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { boolean } from 'yargs';
 import { TodoEntity } from './todo.entity';
+import { ITodoChecklistItem } from '@libs/interface/todo.checklist.interface';
 
 @Entity('todo_checklist_item')
-export class TodoCheckListItem {
+export class TodoCheckListItem implements ITodoChecklistItem {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 

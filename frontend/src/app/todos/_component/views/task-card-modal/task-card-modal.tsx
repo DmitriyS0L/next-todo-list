@@ -1,4 +1,5 @@
-import { updateTaskAction } from '@/action/updateTaskAction';
+import { updateTaskAction } from '@/app/action/taskAction/updateTaskAction';
+import { Editor } from '@/components/editor-area/editor';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,7 +15,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useAutoFocus } from '@/hooks/use.auto.focus';
 import { ITodo, TodoTypeEnum, UpdateTodoDto } from '@libs';
 import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
-import { XIcon } from 'lucide-react';
+import { Trash2, XIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { TodoPriorityEnum } from '../../../../../../../libs/dist/enums/todo-priority.enum';
@@ -37,7 +38,7 @@ import { TaskCardModalDropdownMenu } from './modal-attachments-dropdownmenu';
 import { CheckList } from './modal-checklist-section';
 import { DeadlineSection } from './modal-deadline-section';
 import { SelectSection } from './modal-select-section';
-import { Editor } from '@/components/editor-area/editor';
+import { deleteTaskAction } from '@/app/action/taskAction/deleteTaskAction';
 
 interface Props {
   open: boolean;
@@ -133,6 +134,10 @@ export const TaskCardModal = ({ open, setOpen, todo }: Props) => {
     setOpen(false);
   };
 
+  const handleDeleteTask = async () => {
+    await deleteTaskAction(todo.id);
+  };
+
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
       setEditMode(initialEditMode());
@@ -153,7 +158,7 @@ export const TaskCardModal = ({ open, setOpen, todo }: Props) => {
           className="flex flex-col gap-6 sm:max-w-4xl bg-gray-100 rounded-md shadow-lg font-open-sans"
         >
           <DialogHeader className="flex flex-col gap-0 font-extralight">
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-row  ">
               <DialogTitle className="text-2xl font-bold">Task Details</DialogTitle>
               <DialogClose className="cursor-pointer opacity-60 hover:opacity-90 p-2 rounded-full hover:bg-gray-200 ">
                 <XIcon height={20} width={20} />
@@ -415,15 +420,29 @@ export const TaskCardModal = ({ open, setOpen, todo }: Props) => {
               </div>
             </div>
           </ScrollArea>
-          <div className="flex justify-end gap-2 pr-4">
+          <div className="flex justify-between px-4">
             <DialogClose asChild>
-              <Button className="cursor-pointer bg-gray-400 hover:bg-gray-500">Discard</Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <Button className="cursor-pointer bg-blue-600 hover:bg-blue-700" onClick={handleSave}>
-                Save
+              <Button
+                className="cursor-pointer  bg-gray-400 hover:bg-red-500 "
+                onClick={handleDeleteTask}
+              >
+                <Trash2 />
+                <span>Delete</span>
               </Button>
             </DialogClose>
+            <div className="space-x-4">
+              <DialogClose asChild>
+                <Button className="cursor-pointer bg-gray-400 hover:bg-gray-500">Discard</Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <Button
+                  className="cursor-pointer bg-blue-600 hover:bg-blue-700"
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+              </DialogClose>
+            </div>
           </div>
         </DialogContent>
       </DialogOverlay>

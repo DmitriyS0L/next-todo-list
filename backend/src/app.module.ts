@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { dataSource } from './data-source';
 import { TodoModule } from './todo/todo.module';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { TodoModule } from './todo/todo.module';
     }),
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     TodoModule,
+    UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

@@ -1,9 +1,10 @@
 'use client';
 
+import { reorderTaskAction } from '@/app/action/taskAction/reorderTaskAction';
 import { Modal } from '@/app/todos/_component/views/create-task-modal';
+import { Button } from '@/components/ui/button';
 import { TODO_COLOR_STATUS } from '@/lib/enums/todo-color-status.enum';
 import { generateOrderPayload } from '@/lib/utils/generateOrderPayload';
-import { reorderTaskAction } from '@/action/reorderTaskAction';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import {
   closestCenter,
@@ -15,12 +16,14 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { ITodo, TodoStatusEnum } from '@libs';
+import { ArrowBigLeftDash } from 'lucide-react';
 import { startTransition, useMemo, useOptimistic, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { EmptyColumnDropZone } from '../board/empty-column';
 import { SortableItem } from '../board/sortable-item';
 import { SortableTask } from '../board/sortable-task';
 import { TaskCardModal } from './task-card-modal/task-card-modal';
+import { useRouter } from 'next/navigation';
 
 export const TodoList = ({ todos: initialTodos }: { todos: ITodo[] }) => {
   const [optimisticTodos, addOptimisticTodo] = useOptimistic<ITodo[], ITodo[]>(
@@ -31,6 +34,7 @@ export const TodoList = ({ todos: initialTodos }: { todos: ITodo[] }) => {
   const [isModalOpen, setIsModalCreateOpen] = useState(false);
   const [isModalTaskDetailsOpen, setIsModalTaskDetailsOpen] = useState(false);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
+  const router = useRouter();
 
   const groups = useMemo(() => {
     const map: Record<TodoStatusEnum, ITodo[]> = {
@@ -40,7 +44,7 @@ export const TodoList = ({ todos: initialTodos }: { todos: ITodo[] }) => {
       [TodoStatusEnum.DONE]: [],
     };
 
-    optimisticTodos.forEach((todo) => map[todo.status].push(todo));
+    optimisticTodos?.forEach((todo) => map[todo.status].push(todo));
     return map;
   }, [optimisticTodos]);
 
@@ -88,16 +92,26 @@ export const TodoList = ({ todos: initialTodos }: { todos: ITodo[] }) => {
     setIsModalTaskDetailsOpen(false);
   };
 
+  const handleBack = () => {
+    router.push('/');
+  };
+
   return (
     <div className="flex flex-col items-center font-open-sans font-light">
-      <div className="flex flex-row justify-end w-full my-2">
-        <button
+      <div className="flex flex-row justify-between items-center w-full my-2">
+        <ArrowBigLeftDash
+          height={32}
+          width={36}
+          className="bg-red-500 font-medium text-white text-sm rounded hover:bg-red-600 transition shadow-sm shadow-red-500 cursor-pointer"
+          onClick={handleBack}
+        />
+        <Button
           className="px-4 py-1.5 bg-blue-600 font-medium text-white text-sm rounded hover:bg-blue-700 transition shadow-sm shadow-slate-700 cursor-pointer "
           type="button"
           onClick={handleOpenCreateModal}
         >
           Add Task
-        </button>
+        </Button>
       </div>
       <Modal open={isModalOpen} setOpen={handleOpenCreateModal} />
       {activeTodo && (
@@ -115,7 +129,7 @@ export const TodoList = ({ todos: initialTodos }: { todos: ITodo[] }) => {
           onDragStart={handleDragStart}
         >
           {(Object.keys(groups) as TodoStatusEnum[]).map((status: string) => (
-            <div key={status} className="flex flex-col gap-4">
+            <div key={status} className="flex flex-col gap-4 w-80">
               <div
                 className={`flex flex-row items-center justify-between gap-2 font-bold text-lg rounded-sm  text-white py-1 px-2 ${TODO_COLOR_STATUS[status as TodoStatusEnum]}`}
               >

@@ -1,9 +1,9 @@
 import { ITodo } from '@libs/shared';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeepPartial, Repository } from 'typeorm';
+import { DeepPartial, In, Repository } from 'typeorm';
 import { TodoEntity } from './entity/todo.entity';
-import { CreateTodoDto } from '../dto/todo.dto';
+import { CreateTodoDto } from './dto/todo.dto';
 
 @Injectable()
 export class TodoRepository {
@@ -12,32 +12,50 @@ export class TodoRepository {
     private readonly todoRepository: Repository<TodoEntity>
   ) {}
 
-  async findAll(): Promise<TodoEntity[]> {
-    return this.todoRepository.find({ order: { order: 'ASC' }, relations: ['checklist'] });
+  async findAll(userId: string): Promise<TodoEntity[]> {
+    return this.todoRepository.find({
+      where: { user: { id: userId } },
+      order: { order: 'ASC' },
+      relations: ['checklist'],
+    });
   }
 
-  async findByIdOrFail(id: string): Promise<TodoEntity> {
-    const todo = await this.todoRepository.findOne({ where: { id } });
+  async findByIdOrFail(id: string, userId: string): Promise<TodoEntity> {
+    const todo = await this.todoRepository.findOne({ where: { id, user: { id: userId } } });
     if (!todo) {
       throw new Error(`Todo ${id} not found`);
     }
     return todo;
   }
 
-  create(todoData: CreateTodoDto): Promise<TodoEntity> {
-    return this.todoRepository.save(todoData);
+  async findAllByIds(ids: string[], userId: string): Promise<TodoEntity[]> {
+    return this.todoRepository.find({
+      where: {
+        id: In(ids),
+        user: { id: userId },
+      },
+    });
+  }
+
+  create(todoData: CreateTodoDto, userId: string): Promise<TodoEntity> {
+    const todo = this.todoRepository.create({
+      ...todoData,
+      user: { id: userId },
+    });
+    return this.todoRepository.save(todo);
   }
 
   async save(entity: DeepPartial<TodoEntity>[]): Promise<TodoEntity[]> {
     return this.todoRepository.save(entity);
   }
 
-  async update(id: string, todoData: Partial<ITodo>): Promise<TodoEntity> {
-    await this.todoRepository.save({ id, ...todoData });
-    return this.findByIdOrFail(id);
+  async update(id: string, todoData: Partial<ITodo>, userId: string): Promise<TodoEntity> {
+    const todo = await this.findByIdOrFail(id, userId);
+    return this.todoRepository.save({ ...todo, ...todoData });
   }
 
-  async delete(id: string) {
-    await this.todoRepository.delete(id);
+  async delete(id: string, userId: string) {
+    const todo = await this.findByIdOrFail(id, userId);
+    await this.todoRepository.remove(todo);
   }
 }

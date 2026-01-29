@@ -19,7 +19,11 @@ __exportStar(require("./enums/todo-status.enum"), exports);
 __exportStar(require("./enums/todo-priority.enum"), exports);
 __exportStar(require("./enums/todo-type.enum"), exports);
 __exportStar(require("./enums/todo-label.enum"), exports);
+__exportStar(require("./enums/user-role.enum"), exports);
 // Interface (ITodo)
 __exportStar(require("./interface/todos.interface"), exports);
+__exportStar(require("./interface/todo.checklist.interface"), exports);
+__exportStar(require("./interface/user.interface"), exports);
 // Zod Schema
 __exportStar(require("./validation/todo.schema"), exports);
+__exportStar(require("./validation/login.schema"), exports);

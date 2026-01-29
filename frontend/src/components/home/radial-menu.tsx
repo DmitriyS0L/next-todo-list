@@ -1,14 +1,28 @@
 'use client';
 
-import { Activity, Archive, Construction, Library, ListTodo, Settings } from 'lucide-react';
-import { RoundedButton } from './routedButton/routedButton';
+import { Activity, Archive, Construction, Library, ListTodo, LogIn, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { RoundedButton } from './routedButton/routedButton';
+import { IUser } from '@libs';
 
-export const RadialMenu = () => {
+interface IRadialMenuProps {
+  user: IUser | null;
+}
+
+export const RadialMenu = ({ user }: IRadialMenuProps) => {
   const [animate, setAnimate] = useState(false);
+  const router = useRouter();
+
   const handleChangeVisibleLine = () => {
-    setAnimate(true);
+    if (user) {
+      setAnimate(true);
+    } else {
+      router.push('/login');
+    }
   };
+
+  console.log(user);
 
   return (
     <div className="w-full h-dvh flex items-center justify-center">
@@ -58,16 +72,24 @@ export const RadialMenu = () => {
               fill="url(#centerGradient)"
               className="cursor-pointer  border border-b-white"
             />
-            <text
-              x="100"
-              y="100"
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fontSize="5"
-              className="fill-white font-medium font-jakarta uppercase cursor-pointer text-center"
-            >
-              Enter
-            </text>
+            {user ? (
+              <text
+                x="100"
+                y="100"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="5"
+                className="fill-white font-medium font-jakarta uppercase cursor-pointer text-center"
+              >
+                Enter
+              </text>
+            ) : (
+              <foreignObject x="93" y="94" width="12" height="12">
+                <div className="flex items-center justify-center w-full h-full text-white cursor-pointer">
+                  <LogIn size={12} strokeWidth={2.5} />
+                </div>
+              </foreignObject>
+            )}
           </g>
 
           {/* Зовнішній круг */}

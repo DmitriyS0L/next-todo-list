@@ -66,7 +66,7 @@ export const CheckList = ({ items = [], onChangeEdit, editMode, onChangeValue }:
         </span>
         <span className="relative h-1 rounded-full bg-neutral-300">
           <span
-            className={`absolute h-1 rounded-full bg-green-700 transition-all delay-100 w-1/4`}
+            className="absolute h-1 rounded-full bg-green-700 transition-all delay-100"
             style={{ width: `${(completed / total) * 100}%` }}
           />
         </span>
