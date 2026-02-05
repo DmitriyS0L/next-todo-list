@@ -6,12 +6,13 @@ import {
   Inter,
   Open_Sans,
   Oswald,
-  Roboto,
   Plus_Jakarta_Sans,
+  Roboto,
 } from 'next/font/google';
-import './globals.css';
-import { Bounce, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ReactQueryProvider from '@/providers/ReactQueryProvider';
+import './globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -71,7 +72,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} ${openSans.variable} ${roboto.variable} ${inter.variable} ${oswald.variable} ${plusJakarta.variable} antialiased`}
       >
-        {children}
+        <ReactQueryProvider>{children}</ReactQueryProvider>
         <ToastContainer />
       </body>
     </html>

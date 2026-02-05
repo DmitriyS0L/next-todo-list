@@ -13,7 +13,6 @@ export const loginUserAction = async (formData: LoginSchemaType) => {
     credentials: 'include',
     cache: 'no-cache',
   });
-  5;
   if (!response.ok) return null;
 
   const setCookieHeader = response.headers.get('set-cookie');

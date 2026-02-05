@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,10 +18,12 @@ import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
 
 import { LoginSchemaType, loginSchema } from '@libs/shared';
-import { loginUserAction } from '../../../action/authAction/loginUserAction';
 import { useRouter } from 'next/navigation';
+import { useLoginMutation } from '../../../../hooks/useAuth';
 
 export default function LoginPreview() {
+  const { mutate, isPending, error } = useLoginMutation();
+
   const router = useRouter();
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
@@ -33,18 +34,8 @@ export default function LoginPreview() {
   });
 
   async function onSubmit(values: LoginSchemaType) {
-    try {
-      await loginUserAction(values);
-      toast(
-        <pre className="mt-2 w-85 rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      );
-      router.push('/');
-    } catch (error) {
-      console.error('Form submission error', error);
-      toast.error('Failed to submit the form. Please try again.');
-    }
+    mutate(values);
+    router.push('/');
   }
 
   return (

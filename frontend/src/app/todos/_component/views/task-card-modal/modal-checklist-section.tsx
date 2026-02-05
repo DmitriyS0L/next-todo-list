@@ -1,15 +1,17 @@
 import { Button } from '@/components/ui/button';
+
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { ITodoChecklistItem } from '@libs/interface/todo.checklist.interface';
 import Image from 'next/image';
 import { useState } from 'react';
 import addLabel from '../../../../../../public/image/addLabel.svg';
-import submitBtn from '../../../../../../public/image/submitBtn.svg';
 import cancelBtn from '../../../../../../public/image/cancelBtn.svg';
+import submitBtn from '../../../../../../public/image/submitBtn.svg';
+import { ITodo } from '@libs';
 
 interface Props {
-  items?: ITodoChecklistItem[];
+  items: ITodoChecklistItem[];
   editMode: boolean;
   onChangeEdit: () => void;
   onChangeValue: (value: ITodoChecklistItem[]) => void;
@@ -31,7 +33,7 @@ export const CheckList = ({ items = [], onChangeEdit, editMode, onChangeValue }:
       id: crypto.randomUUID(),
       title: value.trim(),
       isChecked: false,
-      assigned: 'null',
+      assigned: '',
       date: new Date(),
     };
 

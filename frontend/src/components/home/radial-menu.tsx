@@ -3,14 +3,11 @@
 import { Activity, Archive, Construction, Library, ListTodo, LogIn, Settings } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useProfileQuery } from '../../hooks/useAuth';
 import { RoundedButton } from './routedButton/routedButton';
-import { IUser } from '@libs';
 
-interface IRadialMenuProps {
-  user: IUser | null;
-}
-
-export const RadialMenu = ({ user }: IRadialMenuProps) => {
+export const RadialMenu = () => {
+  const { data: user, isPending, error } = useProfileQuery();
   const [animate, setAnimate] = useState(false);
   const router = useRouter();
 
@@ -21,8 +18,6 @@ export const RadialMenu = ({ user }: IRadialMenuProps) => {
       router.push('/login');
     }
   };
-
-  console.log(user);
 
   return (
     <div className="w-full h-dvh flex items-center justify-center">

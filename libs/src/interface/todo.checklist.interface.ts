@@ -6,6 +6,6 @@ export interface ITodoChecklistItem {
   isChecked: boolean;
   assigned: string;
   date: Date;
-  todo: ITodo;
-  todoId: string;
+  todo?: ITodo;
+  todoId?: string;
 }
